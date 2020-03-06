@@ -1,8 +1,9 @@
-package net.polarizedions.annoucerbot;
+package net.polarizedions.annoucerbot.bot;
 
 import discord4j.core.event.EventDispatcher;
 import discord4j.core.event.domain.lifecycle.ReadyEvent;
 import discord4j.core.event.domain.message.MessageCreateEvent;
+import net.polarizedions.annoucerbot.commands.CommandSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -26,6 +27,7 @@ public class EventListener {
 
     private void onMessageEvent(MessageCreateEvent event) {
         log.debug("Message received: {}", event.getMessage());
+        this.bot.getCommandManager().processMessage(new CommandSource(this.bot, event));
     }
 
 

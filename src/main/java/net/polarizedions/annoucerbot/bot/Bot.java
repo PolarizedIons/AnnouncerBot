@@ -1,7 +1,8 @@
-package net.polarizedions.annoucerbot;
+package net.polarizedions.annoucerbot.bot;
 
 import discord4j.core.DiscordClient;
 import discord4j.core.DiscordClientBuilder;
+import net.polarizedions.annoucerbot.commands.CommandManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -12,6 +13,7 @@ public class Bot {
 
     private final DiscordClient client;
     private final EventListener eventListener;
+    private final CommandManager commandManager;
     private final Instant startTime;
 
     public Bot() {
@@ -24,6 +26,8 @@ public class Bot {
         log.debug("Registering events");
         this.eventListener = new EventListener(this);
 
+        log.debug("Registering commands");
+        this.commandManager = new CommandManager();
     }
 
     public void start() {
@@ -33,5 +37,9 @@ public class Bot {
 
     public DiscordClient getClient() {
         return this.client;
+    }
+
+    public CommandManager getCommandManager() {
+        return this.commandManager;
     }
 }
