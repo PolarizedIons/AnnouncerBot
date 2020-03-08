@@ -23,6 +23,8 @@ public class EventListener {
 
     private void onReadyEvent(ReadyEvent event) {
         log.info("Logged in as " + event.getSelf().getUsername() + "#" + event.getSelf().getDiscriminator());
+
+        this.bot.getTrackerManager().startThreadPool();
     }
 
     private void onMessageEvent(MessageCreateEvent event) {

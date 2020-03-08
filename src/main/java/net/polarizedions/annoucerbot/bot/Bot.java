@@ -3,6 +3,7 @@ package net.polarizedions.annoucerbot.bot;
 import discord4j.core.DiscordClient;
 import discord4j.core.DiscordClientBuilder;
 import net.polarizedions.annoucerbot.commands.CommandManager;
+import net.polarizedions.annoucerbot.trackers.TrackerManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -15,6 +16,7 @@ public class Bot {
     private final EventListener eventListener;
     private final CommandManager commandManager;
     private final Instant startTime;
+    private final TrackerManager trackerManager;
 
     public Bot() {
         log.info("Construction a new bot...");
@@ -26,13 +28,24 @@ public class Bot {
         log.debug("Registering events");
         this.eventListener = new EventListener(this);
 
+        log.debug("Registering Trackers");
+        this.trackerManager = new TrackerManager(this);
+
         log.debug("Registering commands");
-        this.commandManager = new CommandManager();
+        this.commandManager = new CommandManager(this);
+
+        Runtime.getRuntime().addShutdownHook(new Thread(this::shutdownHook));
     }
 
     public void start() {
         log.info("Logging in...");
         this.client.login().block();
+    }
+
+    private void shutdownHook() {
+        log.info("Shutting down...");
+        this.trackerManager.shutdown();
+        this.client.logout().block();
     }
 
     public DiscordClient getClient() {
@@ -41,5 +54,17 @@ public class Bot {
 
     public CommandManager getCommandManager() {
         return this.commandManager;
+    }
+
+    public EventListener getEventListener() {
+        return eventListener;
+    }
+
+    public TrackerManager getTrackerManager() {
+        return trackerManager;
+    }
+
+    public Instant getStartTime() {
+        return startTime;
     }
 }
