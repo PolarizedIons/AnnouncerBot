@@ -6,6 +6,7 @@ import discord4j.core.object.entity.TextChannel;
 import discord4j.core.object.util.Snowflake;
 import net.polarizedions.annoucerbot.api.MinecraftApi;
 import net.polarizedions.annoucerbot.bot.Bot;
+import net.polarizedions.annoucerbot.commands.CommandSource;
 import net.polarizedions.annoucerbot.trackers.ITracker;
 import net.polarizedions.annoucerbot.utils.Colours;
 import net.polarizedions.annoucerbot.utils.Constants;
@@ -21,9 +22,9 @@ import java.util.List;
 
 public class MinecraftUpdateTracker implements ITracker {
     private static final Logger log = LogManager.getLogger(MinecraftUpdateTracker.class.getSimpleName());
+    private static final File configFile = new File("config/mcupdates.json");
 
     private Bot bot;
-    private File configFile;
     private List<Long> channels = new ArrayList<>();
 
     private MinecraftApi.LatestVersions latestVersions = null;
@@ -45,12 +46,11 @@ public class MinecraftUpdateTracker implements ITracker {
 
     @Override
     public void startup(Bot bot) {
-        this.configFile = new File("config/mcupdates.json");
         this.bot = bot;
 
         try {
-            if (this.configFile.exists()) {
-                for (JsonElement el : Constants.JSON_PARSER.parse(new FileReader(this.configFile)).getAsJsonArray()) {
+            if (configFile.exists()) {
+                for (JsonElement el : Constants.JSON_PARSER.parse(new FileReader(configFile)).getAsJsonArray()) {
                     this.channels.add(el.getAsLong());
                 }
             }
@@ -61,8 +61,13 @@ public class MinecraftUpdateTracker implements ITracker {
 
     @Override
     public void run() {
-        System.out.println("run called");
-        MinecraftApi.LatestVersions latest = MinecraftApi.getLatestVersions();
+        MinecraftApi.LatestVersions latest = null;
+        try {
+            latest = MinecraftApi.getLatestVersions();
+        } catch (MinecraftApi.FetchError fetchError) {
+            log.debug("Error fetching version");
+            return;
+        }
 
         if (this.latestVersions != null) {
             if (!this.latestVersions.release.equals(latest.release)) {
@@ -80,7 +85,6 @@ public class MinecraftUpdateTracker implements ITracker {
         for (Long channelId : this.channels) {
             this.bot.getClient().getChannelById(Snowflake.of(channelId)).subscribe((channel -> {
                 if (channel instanceof TextChannel) {
-                    System.out.println("Sending to channel " + channel);
                     ((TextChannel) channel).createEmbed(spec -> {
                         spec.setTitle(this.getDescription());
 
@@ -97,7 +101,7 @@ public class MinecraftUpdateTracker implements ITracker {
     @Override
     public void shutdown() {
         try {
-            FileWriter fw = new FileWriter(this.configFile);
+            FileWriter fw = new FileWriter(configFile);
             fw.write(Constants.GSON.toJson(this.channels));
             fw.close();
         } catch (IOException e) {
@@ -107,14 +111,19 @@ public class MinecraftUpdateTracker implements ITracker {
     }
 
     @Override
-    public boolean addChannel(Channel channel, String[] args) {
-        this.channels.add(channel.getId().asLong());
+    public boolean addChannel(CommandSource source, String[] args) {
+        source.getChannel().subscribe(channel -> {
+            this.channels.add(channel.getId().asLong());
+        });
+
         return true;
     }
 
     @Override
-    public boolean removeChannel(Channel channel, String[] args) {
-        this.channels.remove(channel.getId().asLong());
+    public boolean removeChannel(CommandSource source, String[] args) {
+        source.getChannel().subscribe(channel -> {
+            this.channels.remove(channel.getId().asLong());
+        });
         return true;
     }
 }

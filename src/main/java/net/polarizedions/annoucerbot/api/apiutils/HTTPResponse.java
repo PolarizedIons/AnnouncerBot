@@ -54,4 +54,14 @@ public class HTTPResponse {
         JsonElement json = this.asJson();
         return json == null || json instanceof JsonNull ? null : json.getAsJsonObject();
     }
+
+    @Override
+    public String toString() {
+        return "HTTPResponse{" +
+                "code=" + code +
+                ", headers=" + headers +
+                ", body='" + body + '\'' +
+                ", parsedBody=" + parsedBody +
+                '}';
+    }
 }

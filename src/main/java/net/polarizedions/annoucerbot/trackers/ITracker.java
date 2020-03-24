@@ -1,7 +1,7 @@
 package net.polarizedions.annoucerbot.trackers;
 
-import discord4j.core.object.entity.Channel;
 import net.polarizedions.annoucerbot.bot.Bot;
+import net.polarizedions.annoucerbot.commands.CommandSource;
 
 public interface ITracker {
     String getName();
@@ -9,8 +9,8 @@ public interface ITracker {
     long getInterval();
     void run();
 
-    boolean addChannel(Channel channel, String[] args);
-    boolean removeChannel(Channel channel, String[] args);
+    boolean addChannel(CommandSource source, String[] args);
+    boolean removeChannel(CommandSource source, String[] args);
 
     default void startup(Bot bot) {}
     default void shutdown() {}

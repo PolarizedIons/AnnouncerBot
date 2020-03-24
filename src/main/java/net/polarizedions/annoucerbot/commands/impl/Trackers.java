@@ -41,7 +41,7 @@ public class Trackers implements ICommand {
                                             .then(
                                                     argument("args", greedyString()).executes(c -> this.add(tracker, c.getSource(), getString(c, "args")))
                                             )
-                                            .executes(c -> this.add(tracker, c.getSource(), "'"))
+                                            .executes(c -> this.add(tracker, c.getSource(), ""))
                             )
                             .then(
                                     literal("remove")
@@ -76,7 +76,7 @@ public class Trackers implements ICommand {
     }
 
     private int add(ITracker tracker, CommandSource source, String args) {
-        if (tracker.addChannel(source.getChannel().block(), args.split("\\s"))) {
+        if (tracker.addChannel(source, args.trim().split("\\s", -1))) {
             source.replyEmbed(spec -> {
                 spec.setTitle(tracker.getDescription());
 
@@ -87,12 +87,12 @@ public class Trackers implements ICommand {
                 source.getUser().ifPresentOrElse((user) -> requestedBy.set(user.getUsername() + "#" + user.getDiscriminator()), () -> requestedBy.set("unknown"));
                 spec.setFooter("requested by " + requestedBy.get(), null);
             });
-        };
+        }
         return 1;
     }
 
     private int remove(ITracker tracker, CommandSource source, String args) {
-        if (tracker.removeChannel(source.getChannel().block(), args.split("\\s"))) {
+        if (tracker.removeChannel(source, args.trim().split("\\s", -1))) {
             source.replyEmbed(spec -> {
                 spec.setTitle(tracker.getDescription());
 

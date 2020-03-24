@@ -6,13 +6,13 @@ import net.polarizedions.annoucerbot.api.apiutils.HTTPRequest;
 public class MinecraftApi {
     private static final String LATEST_VERSION_URL = "https://launchermeta.mojang.com/mc/game/version_manifest.json";
 
-    public static LatestVersions getLatestVersions() {
+    public static LatestVersions getLatestVersions() throws FetchError {
         JsonObject json = HTTPRequest.GET(LATEST_VERSION_URL)
                 .doRequest()
                 .asJsonObject();
 
         if (json == null) {
-            return new LatestVersions("unknown", "unknown");
+            throw new FetchError();
         }
 
         JsonObject latest = json.getAsJsonObject("latest");
@@ -28,4 +28,6 @@ public class MinecraftApi {
             this.snapshot = snapshot;
         }
     }
+
+    public static class FetchError extends Exception {}
 }
