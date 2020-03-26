@@ -16,7 +16,7 @@ public class Info implements ICommand {
     @Override
     public void register(CommandDispatcher<CommandSource> dispatcher) {
         dispatcher.register(
-            literal("info").executes(c -> this.info(c.getSource()))
+                literal("info").executes(c -> this.info(c.getSource()))
         );
     }
 

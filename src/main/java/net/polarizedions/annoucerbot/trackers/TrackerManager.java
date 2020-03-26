@@ -10,11 +10,11 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class TrackerManager {
-    private Map<String, ITracker> trackers = new HashMap<>();
     private final ScheduledExecutorService threadPool = Executors.newScheduledThreadPool(Math.min(Runtime.getRuntime().availableProcessors(), 8));
+    private Map<String, ITracker> trackers = new HashMap<>();
 
     public TrackerManager(Bot bot) {
-        ITracker[] trackers = new ITracker[] {
+        ITracker[] trackers = new ITracker[]{
                 new MinecraftUpdateTracker(),
         };
 

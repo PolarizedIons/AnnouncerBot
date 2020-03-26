@@ -29,5 +29,6 @@ public class MinecraftApi {
         }
     }
 
-    public static class FetchError extends Exception {}
+    public static class FetchError extends Exception {
+    }
 }

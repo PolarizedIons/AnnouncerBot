@@ -3,7 +3,11 @@ package net.polarizedions.annoucerbot.api.apiutils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -67,17 +71,15 @@ public class HTTPRequest {
         URL url;
         try {
             url = new URL(this.url);
-        }
-        catch (MalformedURLException e) {
+        } catch (MalformedURLException e) {
             logger.error("Malformed url!", e);
             return null;
         }
 
         HttpURLConnection httpConn;
         try {
-            httpConn = (HttpURLConnection)url.openConnection();
-        }
-        catch (IOException e) {
+            httpConn = (HttpURLConnection) url.openConnection();
+        } catch (IOException e) {
             logger.error("IOException while opening connection!", e);
             return null;
         }
@@ -86,7 +88,7 @@ public class HTTPRequest {
             httpConn.addRequestProperty(entry.getKey(), entry.getValue());
         }
 
-        if (this.body != null && ! this.body.isEmpty()) {
+        if (this.body != null && !this.body.isEmpty()) {
             httpConn.setDoOutput(true);
 
             DataOutputStream dataOutputStream = null;
@@ -95,8 +97,7 @@ public class HTTPRequest {
                 dataOutputStream.writeBytes(this.body);
                 dataOutputStream.flush();
                 dataOutputStream.close();
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 logger.error("IOException while sending body!", e);
                 return null;
             }
@@ -108,8 +109,7 @@ public class HTTPRequest {
 
         try {
             responseCode = httpConn.getResponseCode();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             responseCode = 500;
         }
 
@@ -120,19 +120,17 @@ public class HTTPRequest {
         InputStream is = null;
         try {
             is = httpConn.getInputStream();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             logger.error("Error opening input stream");
         }
 
         if (is != null) {
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
                 String line;
-                while (( line = reader.readLine() ) != null) {
+                while ((line = reader.readLine()) != null) {
                     responseBody.append(line).append("\n");
                 }
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 logger.error("Error reading response into string!", e);
             }
         }

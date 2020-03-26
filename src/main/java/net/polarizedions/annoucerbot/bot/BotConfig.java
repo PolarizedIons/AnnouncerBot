@@ -1,11 +1,14 @@
 package net.polarizedions.annoucerbot.bot;
 
-import net.polarizedions.annoucerbot.Main;
 import net.polarizedions.annoucerbot.utils.Constants;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Path;
 
 public class BotConfig {

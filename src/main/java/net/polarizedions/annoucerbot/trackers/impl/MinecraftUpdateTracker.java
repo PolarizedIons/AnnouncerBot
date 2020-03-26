@@ -1,7 +1,6 @@
 package net.polarizedions.annoucerbot.trackers.impl;
 
 import com.google.gson.JsonElement;
-import discord4j.core.object.entity.Channel;
 import discord4j.core.object.entity.TextChannel;
 import discord4j.core.object.util.Snowflake;
 import net.polarizedions.annoucerbot.api.MinecraftApi;
@@ -72,8 +71,7 @@ public class MinecraftUpdateTracker implements ITracker {
         if (this.latestVersions != null) {
             if (!this.latestVersions.release.equals(latest.release)) {
                 this.announce("release", latest.release);
-            }
-            else if (!this.latestVersions.snapshot.equals(latest.snapshot)) {
+            } else if (!this.latestVersions.snapshot.equals(latest.snapshot)) {
                 this.announce("snapshot", latest.snapshot);
             }
         }

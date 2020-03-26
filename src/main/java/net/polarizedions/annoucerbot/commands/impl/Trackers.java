@@ -103,7 +103,7 @@ public class Trackers implements ICommand {
                 source.getUser().ifPresentOrElse((user) -> requestedBy.set(user.getUsername() + "#" + user.getDiscriminator()), () -> requestedBy.set("unknown"));
                 spec.setFooter("requested by " + requestedBy.get(), null);
             });
-        };
+        }
         return 1;
     }
 

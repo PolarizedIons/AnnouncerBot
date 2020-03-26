@@ -9,8 +9,6 @@ import net.polarizedions.annoucerbot.commands.impl.Info;
 import net.polarizedions.annoucerbot.commands.impl.Trackers;
 import net.polarizedions.annoucerbot.utils.Colours;
 
-import java.util.concurrent.atomic.AtomicReference;
-
 public class CommandManager {
     private CommandDispatcher<CommandSource> dispatcher;
 
@@ -55,8 +53,7 @@ public class CommandManager {
         if (source.getMessage().startsWith(botPrefix)) {
             try {
                 dispatcher.execute(source.getMessage().substring(botPrefix.length()), source);
-            }
-            catch (CommandSyntaxException e) {
+            } catch (CommandSyntaxException e) {
                 // NOOP
             }
         }
