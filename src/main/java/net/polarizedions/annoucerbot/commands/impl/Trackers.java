@@ -76,7 +76,12 @@ public class Trackers implements ICommand {
     }
 
     private int add(ITracker tracker, CommandSource source, String args) {
-        if (tracker.addChannel(source, args.trim().split("\\s", -1))) {
+        String[] theArgs = args.trim().split("\\s", -1);
+        if (theArgs.length == 1 && theArgs[0].equals("")) {
+            theArgs = new String[0];
+        }
+
+        if (tracker.addChannel(source, theArgs)) {
             source.replyEmbed(spec -> {
                 spec.setTitle(tracker.getDescription());
 

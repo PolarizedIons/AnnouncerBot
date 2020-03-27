@@ -40,7 +40,7 @@ public class CommandManager {
             source.replyEmbed(spec -> {
                 spec.setTitle("PMs are not supported");
 
-                spec.addField("Sorry!", "but Private Messages are not supported! Please message me in a server!", false);
+                spec.addField("Sorry!", "Private Messages are not supported! Please message me in a server!", false);
 
                 spec.setColor(Colours.BAD);
                 spec.setFooter("requested by " + user.getUsername() + "#" + user.getDiscriminator(), null);
@@ -55,6 +55,9 @@ public class CommandManager {
                 dispatcher.execute(source.getMessage().substring(botPrefix.length()), source);
             } catch (CommandSyntaxException e) {
                 // NOOP
+            }
+            catch (Exception e) {
+                source.reply("Sorry, an error occurred! " + e.getMessage());
             }
         }
     }

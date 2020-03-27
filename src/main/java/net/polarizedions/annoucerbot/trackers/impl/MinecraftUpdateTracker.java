@@ -21,7 +21,7 @@ import java.util.List;
 
 public class MinecraftUpdateTracker implements ITracker {
     private static final Logger log = LogManager.getLogger(MinecraftUpdateTracker.class.getSimpleName());
-    private static final File configFile = new File("config/mcupdates.json");
+    private static final File CONFIG_FILE = new File("config/mcupdates.json");
 
     private Bot bot;
     private List<Long> channels = new ArrayList<>();
@@ -48,8 +48,8 @@ public class MinecraftUpdateTracker implements ITracker {
         this.bot = bot;
 
         try {
-            if (configFile.exists()) {
-                for (JsonElement el : Constants.JSON_PARSER.parse(new FileReader(configFile)).getAsJsonArray()) {
+            if (CONFIG_FILE.exists()) {
+                for (JsonElement el : Constants.JSON_PARSER.parse(new FileReader(CONFIG_FILE)).getAsJsonArray()) {
                     this.channels.add(el.getAsLong());
                 }
             }
@@ -60,6 +60,10 @@ public class MinecraftUpdateTracker implements ITracker {
 
     @Override
     public void run() {
+        if (this.channels.size() == 0) {
+            return;
+        }
+
         MinecraftApi.LatestVersions latest = null;
         try {
             latest = MinecraftApi.getLatestVersions();
@@ -89,7 +93,6 @@ public class MinecraftUpdateTracker implements ITracker {
                         spec.addField("New " + type, version, false);
 
                         spec.setColor(Colours.GOOD);
-                        spec.setFooter("Automated", null);
                     }).subscribe();
                 }
             }));
@@ -99,7 +102,7 @@ public class MinecraftUpdateTracker implements ITracker {
     @Override
     public void shutdown() {
         try {
-            FileWriter fw = new FileWriter(configFile);
+            FileWriter fw = new FileWriter(CONFIG_FILE);
             fw.write(Constants.GSON.toJson(this.channels));
             fw.close();
         } catch (IOException e) {
