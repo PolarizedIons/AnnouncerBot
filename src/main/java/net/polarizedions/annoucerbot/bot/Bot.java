@@ -15,12 +15,10 @@ public class Bot {
     private final DiscordClient client;
     private final EventListener eventListener;
     private final CommandManager commandManager;
-    private final Instant startTime;
     private final TrackerManager trackerManager;
 
     public Bot() {
         log.info("Construction a new bot...");
-        this.startTime = Instant.now();
 
         log.debug("Creating client");
         this.client = new DiscordClientBuilder(BotConfig.getInstance().discordToken).build();
@@ -62,9 +60,5 @@ public class Bot {
 
     public TrackerManager getTrackerManager() {
         return trackerManager;
-    }
-
-    public Instant getStartTime() {
-        return startTime;
     }
 }

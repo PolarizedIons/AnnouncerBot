@@ -12,6 +12,10 @@
         <maven.compiler.target>11</maven.compiler.target>
         <maven.compiler.source>11</maven.compiler.source>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- Build info -->
+        <timestamp>${maven.build.timestamp}</timestamp>
+        <maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ssX</maven.build.timestamp.format>
     </properties>
 
     <repositories>
@@ -24,6 +28,14 @@
     </repositories>
 
     <build>
+        <resources>
+            <!-- Build info -->
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+
         <plugins>
             <!-- Build a jar with bundled dependencies -->
             <plugin>
