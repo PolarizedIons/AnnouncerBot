@@ -33,16 +33,14 @@ jobs:
         with:
           tag_name: ${{ steps.get_version.outputs.VERSION }}
           release_name: Release ${{ steps.get_version.outputs.VERSION }}
-          draft: false
+          draft: true
           prerelease: false
 
       - name: Upload Release Asset
         id: upload-release-asset
-        uses: actions/upload-release-asset@v1
+        uses: shogo82148/actions-upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./target/AnnouncerBot-*jar-with-dependencies.jar
-          asset_name: announcerbot_${{ steps.get_version.outputs.VERSION }}.jar
-          asset_content_type: application/jar
+          asset_path: ./target/AnnouncerBot-*-jar-with-dependencies.jar
