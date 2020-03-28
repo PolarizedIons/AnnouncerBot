@@ -46,7 +46,7 @@ public class GithubReleasesTracker implements ITracker {
 
     @Override
     public long getInterval() {
-        return 60;
+        return 300;
     }
 
     @Override
