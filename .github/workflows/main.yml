@@ -6,7 +6,7 @@ on:
       - 'v*'
 
 jobs:
-  build:
+  build-release:
     runs-on: ubuntu-latest
 
     steps:
@@ -44,3 +44,18 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./target/AnnouncerBot-*-jar-with-dependencies.jar
+
+  build-docker:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+     
+      - name: Build Container & Publish to Github Registry
+        uses: elgohr/Publish-Docker-Github-Action@2.14
+        with:
+          name: polarizedions/announcerbot/announcerbot
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }} 
+          registry: docker.pkg.github.com
