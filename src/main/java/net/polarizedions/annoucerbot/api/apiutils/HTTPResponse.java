@@ -1,5 +1,6 @@
 package net.polarizedions.annoucerbot.api.apiutils;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
@@ -53,6 +54,11 @@ public class HTTPResponse {
     public JsonObject asJsonObject() {
         JsonElement json = this.asJson();
         return json == null || json instanceof JsonNull ? null : json.getAsJsonObject();
+    }
+
+    public JsonArray asJsonArray() {
+        JsonElement json = this.asJson();
+        return json == null || json instanceof JsonNull ? null : json.getAsJsonArray();
     }
 
     @Override

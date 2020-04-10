@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
@@ -95,6 +94,7 @@ public class GithubReleasesTracker implements ITracker {
     public boolean addChannel(CommandSource source, String[] args) {
         if (args.length != 1) {
             source.replyEmbed(spec -> {
+                spec.setTitle(this.getDescription());
                 spec.addField("No arguments", "You must specific who to subscribe from!", false);
 
                 spec.setColor(Colours.BAD);
@@ -108,7 +108,7 @@ public class GithubReleasesTracker implements ITracker {
         String[] target = args[0].split("/");
         if (target.length != 2) {
             source.replyEmbed(spec -> {
-                spec.addField("Wrong number of arguments", "You must specific who to subscribe from!",  false);
+                spec.addField("Wrong number of arguments", "You must specific who to subscribe to!",  false);
 
                 spec.setColor(Colours.BAD);
                 AtomicReference<String> requestedBy = new AtomicReference<>();

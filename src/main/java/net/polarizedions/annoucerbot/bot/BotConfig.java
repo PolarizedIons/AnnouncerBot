@@ -21,6 +21,8 @@ public class BotConfig {
     public String discordToken = "";
     public String prefix = "!";
 
+    public String twitchClientID = "";
+
     public static BotConfig getInstance() {
         if (instance == null) {
             log.info("Loading config from {}", CONFIG_FILE);

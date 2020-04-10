@@ -3,6 +3,7 @@ package net.polarizedions.annoucerbot.trackers;
 import net.polarizedions.annoucerbot.bot.Bot;
 import net.polarizedions.annoucerbot.trackers.impl.GithubReleasesTracker;
 import net.polarizedions.annoucerbot.trackers.impl.MinecraftUpdateTracker;
+import net.polarizedions.annoucerbot.trackers.impl.TwitchTracker;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -21,6 +22,7 @@ public class TrackerManager {
         ITracker[] trackers = new ITracker[]{
                 new MinecraftUpdateTracker(),
                 new GithubReleasesTracker(),
+                new TwitchTracker(),
         };
 
         for (ITracker tracker : trackers) {
