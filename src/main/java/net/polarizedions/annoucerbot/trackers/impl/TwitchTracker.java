@@ -46,10 +46,10 @@ public class TwitchTracker implements ITracker {
 
     @Override
     public void run() {
-        Map<String, Boolean> streamers = TwitchApi.isStreaming(new ArrayList<>(this.state.trackingChannels.keySet()));
-        for (Map.Entry<String, Boolean> streamer : streamers.entrySet()) {
+        Map<String, TwitchApi.LiveResponse> streamers = TwitchApi.isStreaming(new ArrayList<>(this.state.trackingChannels.keySet()));
+        for (Map.Entry<String, TwitchApi.LiveResponse> streamer : streamers.entrySet()) {
             if (this.state.trackingStreams.get(streamer.getKey()) != null) {
-                if (!this.state.trackingStreams.get(streamer.getKey()) && streamer.getValue()) {
+                if (!this.state.trackingStreams.get(streamer.getKey()) && streamer.getValue().isLive) {
                     List<Long> channelIds = this.state.trackingChannels.get(streamer.getKey());
                     for (Long channelId : channelIds) {
                         this.bot.getClient().getChannelById(Snowflake.of(channelId)).subscribe(channel -> {
@@ -58,6 +58,8 @@ public class TwitchTracker implements ITracker {
                                     spec.setTitle(streamer.getKey() + " is now live!");
                                     spec.setThumbnail("https://static-cdn.jtvnw.net/previews-ttv/live_user_" + streamer.getKey() + ".jpg");
                                     spec.setUrl("https://twitch.tv/" + streamer.getKey());
+
+                                    spec.addField("Title", streamer.getValue().title, false);
 
                                     spec.setColor(Colours.GOOD);
                                     spec.setFooter("Automated", null);
@@ -68,7 +70,7 @@ public class TwitchTracker implements ITracker {
                 }
             }
 
-            this.state.trackingStreams.put(streamer.getKey(), streamer.getValue());
+            this.state.trackingStreams.put(streamer.getKey(), streamer.getValue().isLive);
         }
     }
 

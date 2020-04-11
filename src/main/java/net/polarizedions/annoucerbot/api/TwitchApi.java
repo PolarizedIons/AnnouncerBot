@@ -16,12 +16,12 @@ public class TwitchApi {
     private static final String TWITCH_STEAMS_URL = "https://api.twitch.tv/helix/streams?";
     private static final String TWITCH_STREAM_USER_PART = "user_login=%s";
 
-    public static Map<String, Boolean> isStreaming(List<String> users) {
+    public static Map<String, LiveResponse> isStreaming(List<String> users) {
         List<List<String>> toCheck = new ArrayList<>();
         for (int i = 0; i < users.size(); i += STREAMS_REQUEST_SIZE) {
             toCheck.add(users.subList(i, Math.min(users.size(), i + STREAMS_REQUEST_SIZE)));
         }
-        Map<String, Boolean> result = new HashMap<>();
+        Map<String, LiveResponse> result = new HashMap<>();
 
         for (List<String> chunk : toCheck) {
             StringBuilder urlBuilder = new StringBuilder(TWITCH_STEAMS_URL);
@@ -36,16 +36,26 @@ public class TwitchApi {
                     .doRequest()
                     .asJsonObject();
 
-            List<String> onlineUsers = new ArrayList<>();
+            Map<String, String> onlineTitles = new HashMap<>();
             for (JsonElement el : obj.getAsJsonArray("data")) {
-                onlineUsers.add(el.getAsJsonObject().get("user_name").getAsString().toLowerCase());
+                onlineTitles.put(el.getAsJsonObject().get("user_name").getAsString().toLowerCase(), el.getAsJsonObject().get("title").getAsString());
             }
 
             for (String user : chunk) {
-                result.put(user, onlineUsers.contains(user.toLowerCase()));
+                LiveResponse liveResponse = new LiveResponse();
+                liveResponse.isLive = onlineTitles.containsKey(user);
+                liveResponse.username = user;
+                liveResponse.title = onlineTitles.getOrDefault(user, "");
+                result.put(user, liveResponse);
             }
         }
 
         return result;
+    }
+
+    public static class LiveResponse {
+        public boolean isLive;
+        public String username;
+        public String title;
     }
 }
