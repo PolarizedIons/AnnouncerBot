@@ -16,6 +16,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -56,7 +57,7 @@ public class TwitchTracker implements ITracker {
                             if (channel instanceof TextChannel) {
                                 ((TextChannel) channel).createEmbed(spec -> {
                                     spec.setTitle(streamer.getKey() + " is now live!");
-                                    spec.setThumbnail("https://static-cdn.jtvnw.net/previews-ttv/live_user_" + streamer.getKey() + ".jpg");
+                                    spec.setThumbnail("https://static-cdn.jtvnw.net/previews-ttv/live_user_" + streamer.getKey() + ".jpg?t=" + Instant.now().getEpochSecond());
                                     spec.setUrl("https://twitch.tv/" + streamer.getKey());
 
                                     spec.addField("Title", streamer.getValue().title, false);
